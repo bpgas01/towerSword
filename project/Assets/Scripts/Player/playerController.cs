@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System.Diagnostics;
+using System.Xml.Schema;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,33 +19,62 @@ public class playerController : MonoBehaviour
     [SerializeField] private float timerSlowMultiplier;
 
 
-    private Vector2 velocity;
-    private Vector2 acceleration;
-    private Vector2 displacement;
+    private Vector3 velocity;
+    private Vector3 acceleration;
+    private Vector3 displacement;
 
-
-    private Vector2 playerForce;
+    private bool toggleJump = false;
+    private Vector3 playerForce;
 
      float yPos = 0 ;
     // Start is called before the first frame update
     void Start()
     {
         cameraController.InitCamera(playerCamera);
-        
+         
+
+    }
+
+    void toggle(){
+
+        if (toggleJump == false){
+            toggleJump = true;
+            return;
+        }
+        if (toggleJump == true){
+            toggleJump = false;
+            return;
+        }
 
     }
 
     // Update is called once per frame
     void Update()
     {
-    
-        Collider[] hitColliders = Physics.OverlapSphere(playerObjectTransform.position, detectionRadius);
+        
+       
 
-        foreach(var col in hitColliders){
-            if (col.gameObject.CompareTag("Wall")){
-                Debug.Log("On wall");
+        if (Input.GetButtonUp("Jump")){
+
+            toggle();
+
+            if (toggleJump == true){
+                rigidbodyComponent.velocity = (transform.right * playerSpeed);
+                
+                // TO DO : Move right at specfic angle based on velocity (if on left wall)
+
             }
-        }
+            else{
+                rigidbodyComponent.velocity = -transform.right * playerSpeed;
+
+                 // TO DO : Move left at specfic angle based on velocity (if on right wall)
+
+            }
+
+        }   
+        
+
+       yPos =0;
 
 
     }
