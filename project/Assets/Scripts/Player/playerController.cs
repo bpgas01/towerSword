@@ -9,43 +9,42 @@ public class playerController : MonoBehaviour
     [SerializeField] private camerafollow cameraController;
 
     [Header("Player Settings")]
+    [SerializeField] private Rigidbody rigidbodyComponent;
     [SerializeField] private Transform playerObjectTransform;
     [SerializeField] private float playerSpeed;
+
+    [SerializeField] private float detectionRadius;
+    [SerializeField] private float timerSlowMultiplier;
+
+
+    private Vector2 velocity;
+    private Vector2 acceleration;
+    private Vector2 displacement;
+
+
+    private Vector2 playerForce;
 
      float yPos = 0 ;
     // Start is called before the first frame update
     void Start()
     {
         cameraController.InitCamera(playerCamera);
+        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateMovement();
+    
+        Collider[] hitColliders = Physics.OverlapSphere(playerObjectTransform.position, detectionRadius);
 
-
-
-    }
-
-
-
-    void UpdateMovement(){
-
-        float xPos = 0;
-       
-
-        yPos += 1;
-
-        playerObjectTransform.position = new Vector3(0,yPos * playerSpeed * Time.deltaTime,0);
-
-        if (Input.GetButton("Jump")){
-            xPos += 1;
-            playerObjectTransform.position += new Vector3(xPos * playerSpeed * Time.deltaTime,0,0);
-
+        foreach(var col in hitColliders){
+            if (col.gameObject.CompareTag("Wall")){
+                Debug.Log("On wall");
+            }
         }
 
-        
 
     }
 
